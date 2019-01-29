@@ -54,7 +54,10 @@ Dabei sollte man das Programm aus dem verzeichnis aufrufen.
 In diesem Beispiel wird das Script alle 15 Minuten im Ordner unter */home/user/speedtestcli-db* aufgerufen.
 Ausgaben werden direkt in ein Tempverzeichnis gelegt (somit bekommt man nicht jedesmal eine E-Mail, falls ein Script etwas ausgibt.
 
-<pre>*/15 * * * * cd /home/user/speedtestcli-db && /usr/bin/python3 speedtestcli-db.py --run-test</pre>
+<pre>*/15 * * * * cd /home/user/speedtestcli-db && /bin/bash cronscript.sh</pre>
+
+Zur Einfachheit ist bereits das script *cronscript.sh* hinterlegt.
+Man kann somit das Script direkt verwenden oder aber den Inhalt in ein anderes Script einbauen (PATH variable dabei nicht vergessen zu übernehmen).
 
 ## Auswertung
 
