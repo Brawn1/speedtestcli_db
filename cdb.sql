@@ -1,0 +1,2 @@
+CREATE TABLE "speedtest" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "ping" FLOAT, "dl_speed" FLOAT, "up_speed" FLOAT, "date" TEXT, "time" TEXT, "timestamp" DATETIME DEFAULT CURRENT_TIMESTAMP, "ping_unit" INTEGER, "dl_unit" INTEGER, "up_unit" INTEGER);
+CREATE TABLE "unit" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" TEXT NOT NULL  UNIQUE );
