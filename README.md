@@ -54,13 +54,15 @@ Dabei sollte man das Programm aus dem verzeichnis aufrufen.
 In diesem Beispiel wird das Script alle 15 Minuten im Ordner unter */home/user/speedtestcli-db* aufgerufen.
 Ausgaben werden direkt in ein Tempverzeichnis gelegt (somit bekommt man nicht jedesmal eine E-Mail, falls ein Script etwas ausgibt.
 
-<pre>*/15 * * * * cd /home/user/speedtestcli-db && /usr/bin/python3 speedtestcli-db.py --run-test > /tmp/speedtest.log 2>&1</pre>
+<pre>*/15 * * * * cd /home/user/speedtestcli-db && /usr/bin/python3 speedtestcli-db.py --run-test</pre>
+
+## Auswertung
+
+Für die Auswertung in SQLite wurden 3 Views hinterlegt, zeigt die Daten Gruppiert dem Datum mit den Höchst- und Tiefstwerten.
+Das kann man einfach mit einem SQLite Manager / Browser ansehen, oder auch mit einem Programm die Daten Abgreifen.
 
 ## Speedtestcli-db in einem Docker Container
 
 kommt noch!
 
-## Auswertung mit DB Browser for SQLite
-
-kommt noch !
 
