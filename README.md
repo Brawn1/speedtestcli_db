@@ -58,8 +58,13 @@ Ausgaben werden direkt in ein Tempverzeichnis gelegt (somit bekommt man nicht je
 
 ## Auswertung
 
-Für die Auswertung in SQLite wurden 3 Views hinterlegt, zeigt die Daten Gruppiert dem Datum mit den Höchst- und Tiefstwerten.
+Für die Auswertung in SQLite wurden 3 Views hinterlegt, die zeigt die Daten Gruppiert mit den Höchst- und Tiefstwerten an.
 Das kann man einfach mit einem SQLite Manager / Browser ansehen, oder auch mit einem Programm die Daten Abgreifen.
+
+Bei diesem Beispiel können wir die X und Y Achse als Linien Diagramm darstellen
+
+![Demo DB Browser SQLite](images/SQLite_DBBrowser_Graph.png)
+
 
 ## Speedtestcli-db in einem Docker Container
 
