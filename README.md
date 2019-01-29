@@ -1,10 +1,7 @@
 # Speedtestcli-db
 
-Dieses Script verwendet das Python Programm *speedtest-cli* und schreibt die Resultate in eine SQLite Datenbank.
-
-
-Dieses kleine Python Programm schickt die Speedtest-cli Resultate in eine SQLite Datenbank.
-Danach kann man die DB mit z.b.: DB Browser for SQLite öffnen und auch darin ein Diagramm erstellen.
+Dieses Script verwendet das Python Programm **speedtest-cli** und schreibt die Resultate nach und nach in eine SQLite Datenbank.
+Danach kann man die Resultate z.b.: mit mit dem **DB Browser for SQLite** öffnen und auch darin ein Diagramm erstellen.
 
 
 ## Benötigte Pakete
