@@ -49,6 +49,12 @@ Wenn man jetzt nochmal mit dem gleichen Befehl aufruft, wird das ergebnis in die
 ## Cronjob erstellen
 
 Falls man eine Messung über längeren Zeitraum braucht, empfiehlt es sich einen Cronjob mit dem Aufruf vom *speedtestcli-db* zu verwenden.
+Dabei sollte man das Programm aus dem verzeichnis aufrufen.
+
+In diesem Beispiel wird das Script alle 15 Minuten im Ordner unter */home/user/speedtestcli-db* aufgerufen.
+Ausgaben werden direkt in ein Tempverzeichnis gelegt (somit bekommt man nicht jedesmal eine E-Mail, falls ein Script etwas ausgibt.
+
+<pre>*/15 * * * * cd /home/user/speedtestcli-db && /usr/bin/python3 speedtestcli-db.py --run-test > /tmp/speedtest.log 2>&1</pre>
 
 ## Speedtestcli-db in einem Docker Container
 
