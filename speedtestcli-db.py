@@ -5,14 +5,17 @@
 from os import curdir, sep, getenv, mkdir, path, rename
 import json
 import sys
+import time
 import datetime
 import sqlite3 as lite
 from subprocess import Popen, PIPE
 from optparse import OptionParser
+import logging
 
 
-DEBUG = True if getenv('debug', 'False') == 'True' else False
-DB_NAME = getenv('db_name', 'speedtestdb.db')
+DOCKER = True if getenv('docker_container', 'false') == 'true' else False
+DEBUG = True if getenv('debug', 'false') == 'true' else False
+DB_NAME = getenv('db-name', 'speedtestdb.db')
 DB_PATH = curdir+sep+'db'
 prog_version = '1.0'
 
@@ -176,6 +179,28 @@ Upload = {up_speed} {up_unit}\n========================="""
         self.print_msg()
 
 
+class Schedule_Worker():
+    def __init__(self, unit='minutes', mtime=30):
+        import schedule
+        self.time = int(mtime)
+
+        if unit == 'minutes':
+            schedule.every(self.time).minutes.do(Speedtest().speedtest)
+        elif unit == 'hours':
+            schedule.every(self.time).hours.do(Speedtest().speedtest)
+        elif unit == 'seconds':
+            schedule.every(self.time).seconds.do(Speedtest().speedtest)
+        else:
+            schedule.every(self.time).minutes.do(Speedtest().speedtest)
+
+        # start speedtest for one time and then after scheduled time
+        Speedtest().speedtest()
+
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+
+
 class App():
     def __init__(self):
         usage = "Speedtestcli-db v{}".format(prog_version)
@@ -184,19 +209,71 @@ class App():
                           help="run Speedtest and store result into DB")
         parser.add_option("--create-db", action="store_true", default=False, dest="createdb",
                           help="rename old database if exists and create new one")
+        parser.add_option("--debug", action="store_true", default=False, dest="debug",
+                          help="run in debug mode")
+        parser.add_option("--db-name", dest="db_name", action="store", default="speedtestdb.db",
+                          help="add database name")
+        parser.add_option("--schedule-unit", dest="schedule_unit", action="store",
+                          help="waitunit between measurement (seconds, minutes, hours)")
+        parser.add_option("--schedule-time", dest="schedule_time", action="store",
+                          help="waittime between measurement (integer value)")
         (options, args) = parser.parse_args()
 
         try:
-            if options.runtest:
-                Speedtest().speedtest()
+            if options.db_name:
+                DB_NAME = options.db_name
+                if not path.isfile(DB_PATH + sep + DB_NAME):
+                    check_db()
+
+            if options.debug:
+                DEBUG = True
 
             if options.createdb and not options.runtest:
                 create_new_db()
-                print("new DB {} created".format(DB_NAME))
+
+            if options.schedule_time and options.schedule_unit:
+                Schedule_Worker(unit=options.schedule_unit, mtime=options.schedule_time)
+
+            if options.runtest:
+                Speedtest().speedtest()
 
         except IndexError:
-            Speedtest().speedtest()
+            print(options)
+            print(args)
+
+
+class DockerApp():
+    def __init__(self):
+        try:
+            check_db()
+
+            if getenv('create-db', None) and not getenv('run-test', None):
+                create_new_db()
+
+            if getenv('schedule-unit', None) and getenv('schedule-time', None):
+                Schedule_Worker(unit=getenv('schedule-unit'), mtime=getenv('schedule-time'))
+
+            if getenv('run-test', None):
+                Speedtest().speedtest()
+
+        except IndexError:
+            self.print_help()
+
+    def print_help(self):
+        msg = "Speedtestcli-db v{}\n\n".format(prog_version)
+        msg += "create-db            rename old database if exists and create new one\n"
+        msg += "run-test             run Speedtest and store result into DB\n"
+        msg += "debug                run in debug mode\n"
+        msg += "db-name              add database name\n"
+        msg += "schedule-unit        waitunit between measurement (seconds, minutes, hours)\n"
+        msg += "schedule-time        waittime between measurement (integer value)\n"
+        print(msg)
+        exit(1)
 
 
 if __name__ == "__main__":
-    app = App()
+    if not DOCKER:
+        app = App()
+    else:
+        print("running in docker")
+        app = DockerApp()
