@@ -71,6 +71,37 @@ Bei diesem Beispiel können wir die X und Y Achse als Linien Diagramm darstellen
 
 ## Speedtestcli-db in einem Docker Container
 
-kommt noch!
+Ab der Version 1.0 kann man das Programm auch direkt mit Docker verwenden.
 
+Dabei wird die SQLite DB in ein Volume geschrieben, damit die Daten nicht nach dem Löschen verloren gehen, bzw. für die 
+[Auswertung](#Auswertung) vorhanden sind.
 
+### Docker Container Bauen und Starten
+
+* Projekt Downloaden / Klonen
+<pre>git clone https://github.com/Brawn1/speedtestcli_db.git</pre>
+
+* Docker Container erstellen
+<pre>docker build -t speedtestcli-db:1.0 .</pre>
+
+* Docker Container starten und alle 15 Minuten eine Messung vornehmen
+
+<pre>docker run -it --name speedtestcli-db -v ./db:/speedtestcli_db/db -e run-test=true -e schedule-unit=minutes -e schedule-time=15 -d speedtestcli-db:1.0</pre>
+
+### docker-compose
+Einfacher ist es direkt mit docker-compose zu Arbeiten.
+
+<pre>
+version: '3.0'
+
+services:
+  speedtestcli-db:
+    build: .
+    image: speedtestcli-db:1.0
+    environment:
+      - run-test=true
+      - schedule-unit=minutes
+      - schedule-time=2
+    volumes:
+      - ./db:/speedtestcli_db/db
+</pre>
