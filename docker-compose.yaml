@@ -1,0 +1,12 @@
+version: '3.0'
+
+services:
+  speedtestcli-db:
+    build: .
+    image: speedtestcli-db:1.0
+    environment:
+      - run-test=true
+      - schedule-unit=minutes
+      - schedule-time=2
+    volumes:
+      - ./db:/speedtestcli_db/db

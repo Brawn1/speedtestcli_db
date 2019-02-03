@@ -2,11 +2,16 @@
 # Dockerfile to run speedtest-cli-db in Docker
 # Based on Alpine Linux
 ###################################################
-FROM python:3.5-alpine
+FROM python:3.6-alpine
 MAINTAINER Brawn1
 
 # Configure Timezone
 ENV TIMEZONE "Europe/Vienna"
+ENV debug false
+ENV docker_container true
+ENV db-name "speedtestdb.db"
+ENV run-test true
+
 RUN apk update &&apk add tzdata
 RUN rm -f /etc/localtime && \
     ln -s "/usr/share/zoneinfo/${TIMEZONE}" /etc/localtime && \
@@ -16,9 +21,8 @@ RUN rm -f /etc/localtime && \
 ENV PRJDIR="speedtestcli_db"
 ENV PRJPATH=/$PRJDIR
 
-RUN mkdir -p $PRJPATH
+RUN mkdir -p $PRJPATH/"db"
 
-COPY cdb.sql $PRJPATH/
 COPY requirements.txt $PRJPATH/
 COPY speedtestcli-db.py $PRJPATH/
 COPY setup.py $PRJPATH/
@@ -26,6 +30,6 @@ COPY setup.py $PRJPATH/
 WORKDIR $PRJPATH
 RUN pip3 install -r requirements.txt
 
-VOLUME ["$PRJPATH"]
+VOLUME ["$PRJPATH/db"]
 
-CMD ["./speedtestcli-db.py", "--run-test"]
+CMD ["./speedtestcli-db.py"]
