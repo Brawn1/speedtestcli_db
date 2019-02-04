@@ -18,12 +18,18 @@ Mit pip install -r requirements.txt installiert man die restlichen Pakete.
 Die Optionen kann man im Script mit **--help** anzeigen lassen.
 <pre>
 user@NB:#$ python speedtestcli-db.py --help
-Usage: Speedtestcli-db v0.1.3 options
+Usage: Speedtestcli-db v1.0
 
 Options:
-  -h, --help   show this help message and exit
-  --run-test   run Speedtest and store result into DB
-  --create-db  rename old database if exists and create new one 
+  -h, --help            show this help message and exit
+  --run-test            run Speedtest and store result into DB
+  --create-db           rename old database if exists and create new one
+  --debug               run in debug mode
+  --db-name=DB_NAME     add database name
+  --schedule-unit=SCHEDULE_UNIT
+                        waitunit between measurement (seconds, minutes, hours)
+  --schedule-time=SCHEDULE_TIME
+                        waittime between measurement (integer value)
 </pre>
 
 ### Speedtest Messung
@@ -76,9 +82,22 @@ Ab der Version 1.0 kann man das Programm auch direkt mit Docker verwenden.
 Dabei wird die SQLite DB in ein Volume geschrieben, damit die Daten nicht nach dem Löschen verloren gehen, bzw. für die 
 [Auswertung](#Auswertung) vorhanden sind.
 
+### Docker Environments
+Die Environments sind die gleichen als, wenn man das Programm normal verwendet.
+
+| Option | Beschreibung |
+|--- |--- |
+| create-db | rename old database if exists and create new one |
+| run-test | run Speedtest and store result into DB |
+| debug | run in debug mode |
+| db-name | add database name |
+| schedule-unit |waitunit between measurement (seconds, minutes, hours) |
+| schedule-time | waittime between measurement (integer value) |
+
+
 ### Docker Container Bauen und Starten
 
-* Projekt Downloaden / Klonen
+* Projekt Download / Klonen
 <pre>git clone https://github.com/Brawn1/speedtestcli_db.git</pre>
 
 * Docker Container erstellen
@@ -88,7 +107,7 @@ Dabei wird die SQLite DB in ein Volume geschrieben, damit die Daten nicht nach d
 
 <pre>docker run -it --name speedtestcli-db -v ./db:/speedtestcli_db/db -e run-test=true -e schedule-unit=minutes -e schedule-time=15 -d speedtestcli-db:1.0</pre>
 
-### docker-compose
+### docker-compose.yaml
 Einfacher ist es direkt mit docker-compose zu Arbeiten.
 
 <pre>
@@ -105,3 +124,5 @@ services:
     volumes:
       - ./db:/speedtestcli_db/db
 </pre>
+
+Mit *docker-compose build* container bauen und mit *docker-compose up -d* Container im Daemonmode starten.
